@@ -11,6 +11,12 @@ const getUsers = async (req, res) => {
     res.status(StatusCodes.OK).json({ ...user });
 };
 
+const getUser = async (req, res) => {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    res.status(StatusCodes.OK).json(user);
+};
+
 const checkMatch = (oppositeGender, user) => {
     let matchingPercent = 0;
     let totalPercent = 0;
@@ -90,6 +96,7 @@ const checkMatch = (oppositeGender, user) => {
         if (i.toLowerCase() === "non-drinker" && oppositeGender.drink !== "yes") {
             matchingPercent++;
         }
+        totalPercent++;
     });
 
     return {
@@ -102,9 +109,7 @@ const checkMatch = (oppositeGender, user) => {
 
 const getMatch = async (req, res) => {
     const { id } = req.params;
-    console.log(id);
     const user = await User.findById(id);
-    console.log(user);
     const allUsers = await User.find();
     const oppositeGenders = allUsers.filter(
         (currentUser) => currentUser.gender !== user.gender
@@ -113,7 +118,7 @@ const getMatch = async (req, res) => {
         checkMatch(oppositeGender, user)
     );
 
-    const firstFive = matches.sort((i, j) => j.percent - i.percent).slice(0, 15);
+    const firstFive = matches.sort((i, j) => j.percent - i.percent).slice(0, 5);
     res.status(StatusCodes.OK).json(firstFive);
 };
 
@@ -136,7 +141,7 @@ const getRahulJamesMatch = async (req, res) => {
                 }
             });
     });
-    res.status(StatusCodes.OK).json(arr.slice(0, 10));
+    res.status(StatusCodes.OK).json(arr.slice(0, 5));
 };
 
 const getURL = async (req, res) => {
@@ -145,7 +150,7 @@ const getURL = async (req, res) => {
         users.map((user) => ({
             name: user.name,
             regNo: user.regNo,
-            url: `https://seamosparejas.netlify.app/user/match/${user._id}`,
+            id: user._id,
         }))
     );
 };
@@ -156,4 +161,5 @@ module.exports = {
     getMatch,
     getRahulJamesMatch,
     getURL,
+    getUser,
 };
