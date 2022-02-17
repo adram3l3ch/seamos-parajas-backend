@@ -123,44 +123,12 @@ const getMatch = async (req, res) => {
     res.status(StatusCodes.OK).json(firstFive);
 };
 
-const getRahulJamesMatch = async (req, res) => {
-    const allUsers = await User.find();
-    const arr = [];
 
-    allUsers.map((oneUser) => {
-        const oppositeGenders = allUsers.filter(
-            (currentUser) => currentUser.gender !== oneUser.gender
-        );
-        const match = oppositeGenders.map((op) => {
-            return checkMatch(op, oneUser);
-        });
-        match
-            .sort((i, j) => j.percent - i.percent)
-            .forEach((a, i) => {
-                if (i < 20) {
-                    if (a.regNo === "PRN19EC027") arr.push({ name: oneUser.name });
-                }
-            });
-    });
-    res.status(StatusCodes.OK).json(arr.slice(0, 5));
-};
 
-const getURL = async (req, res) => {
-    const users = await User.find({});
-    res.status(StatusCodes.OK).json(
-        users.map((user) => ({
-            name: user.name,
-            regNo: user.regNo,
-            id: user._id,
-        }))
-    );
-};
 
 module.exports = {
     createUser,
     getUsers,
     getMatch,
-    getRahulJamesMatch,
-    getURL,
     getUser,
 };
