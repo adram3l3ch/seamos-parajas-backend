@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
-const checkMatch = require("./checkMatch.js")
+const {checkMatch} = require("./checkMatch.js")
 
 const createUser = async (req, res) => {
     const user = await User.create({ ...req.body });
